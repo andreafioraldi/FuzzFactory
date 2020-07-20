@@ -4,7 +4,7 @@
 
 #include <malloc.h>
 
-#define BUF_MAP_SIZE (1 << 16)
+#define BUF_MAP_SIZE (1 << 20)
 
 FUZZFACTORY_DSF_NEW(__afl_buf_start_dsf, BUF_MAP_SIZE, FUZZFACTORY_REDUCER_MAX, 0);
 FUZZFACTORY_DSF_NEW(__afl_buf_end_dsf, BUF_MAP_SIZE, FUZZFACTORY_REDUCER_MAX, 0);
