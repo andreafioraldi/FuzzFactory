@@ -3,6 +3,7 @@
 *.o
 *.so
 *.gch
+*.a
 
 # don't track the actual binaries
 afl-showmax

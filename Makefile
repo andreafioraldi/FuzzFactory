@@ -163,7 +163,7 @@ publish: clean
 	echo -n "$(VERSION)" >~/www/afl/version.txt
 
 # FuzzFactory LLVM-based domains
-DOMAINS ?= slow perf mem cmp valid diff
+DOMAINS ?= buf slow perf mem cmp valid diff
 .PHONY: fuzzfactory-domains
 .PHONY: $(DOMAINS)
 
@@ -171,4 +171,4 @@ llvm-domains: $(DOMAINS)
 	make -C llvm_mode
 
 $(DOMAINS):
-	make -C llvm_mode ../waypoints-$@-rt.o ../waypoints-$@-pass.so
+	make -C llvm_mode ../waypoints-$@-rt.a ../waypoints-$@-pass.so

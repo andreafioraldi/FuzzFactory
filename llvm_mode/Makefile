@@ -104,6 +104,12 @@ endif
 ../waypoints-%-rt.o: waypoints-%-rt.c
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@
 
+../waypoints-%-rt.a: ../waypoints-%-rt.o
+	$(AR) rcs $@ $<
+
+../waypoints-buf-rt.a: ../waypoints-buf-rt.o
+	$(MAKE) -C interval-tree/
+	$(AR) rcs $@ $< interval-tree/*.o
 
 test_build: $(PROGS)
 	@echo "[*] Testing the CC wrapper and instrumentation output..."

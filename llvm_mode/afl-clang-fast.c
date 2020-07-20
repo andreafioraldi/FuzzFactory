@@ -148,7 +148,9 @@ static void edit_params(u32 argc, char** argv) {
     cc_params[cc_par_cnt++] = "-load";
     cc_params[cc_par_cnt++] = "-Xclang";
     cc_params[cc_par_cnt++] = alloc_printf("%s/waypoints-%s-pass.so", obj_path, domain);
-    cc_params[cc_par_cnt++] = alloc_printf("%s/waypoints-%s-rt.o", obj_path, domain);
+    cc_params[cc_par_cnt++] = "-Wl,--whole-archive";
+    cc_params[cc_par_cnt++] = alloc_printf("%s/waypoints-%s-rt.a", obj_path, domain);
+    cc_params[cc_par_cnt++] = "-Wl,--no-whole-archive";
 
     domain = strtok(NULL, comma);
   }
