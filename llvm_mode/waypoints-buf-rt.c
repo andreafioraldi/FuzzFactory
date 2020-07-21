@@ -40,7 +40,7 @@ void __afl_buf_alloc_tree_insert(uintptr_t start, uintptr_t end, uintptr_t alloc
   struct alloc_tree_node* node = calloc(sizeof(struct alloc_tree_node), 1);
   node->start = start;
   node->last = end;
-  node->alloc_site = alloc_site;
+  node->alloc_site = alloc_site & (BUF_MAP_SIZE - 1);
   alloc_tree_insert(node, &root);
 }
 
