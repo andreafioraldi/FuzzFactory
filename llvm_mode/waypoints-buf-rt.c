@@ -40,7 +40,7 @@ void __afl_buf_alloc_tree_insert(uintptr_t start, uintptr_t end, uintptr_t alloc
   struct alloc_tree_node* node = calloc(sizeof(struct alloc_tree_node), 1);
   node->start = start;
   node->last = end;
-  node->alloc_site = alloc_site & (BUF_MAP_SIZE - 1);
+  node->alloc_site = alloc_site;
   alloc_tree_insert(node, &root);
 }
 
@@ -56,13 +56,11 @@ void __afl_buf_alloc_tree_remove(uintptr_t start, uintptr_t end) {
 void __afl_buf_access(uintptr_t ptr, uint32_t size) {
   uintptr_t start, end, alloc_site;
   if (!__afl_buf_alloc_tree_search(ptr, &start, &end, &alloc_site)) return;
-  FUZZFACTORY_DSF_MAX(__afl_buf_start_dsf, alloc_site, (uint32_t)(start - ptr));
-  FUZZFACTORY_DSF_MAX(__afl_buf_end_dsf, alloc_site, (uint32_t)((ptr + size) - end));
-  /*uintptr_t k = (uintptr_t)__builtin_return_address(0);
+  uintptr_t k = (uintptr_t)__builtin_return_address(0);
   k = (k >> 4) ^ (k << 8) ^ alloc_site;
   k &= BUF_MAP_SIZE - 1;
   FUZZFACTORY_DSF_MAX(__afl_buf_start_dsf, k, (uint32_t)(start - ptr));
-  FUZZFACTORY_DSF_MAX(__afl_buf_end_dsf, k, (uint32_t)((ptr + size) - end));*/
+  FUZZFACTORY_DSF_MAX(__afl_buf_end_dsf, k, (uint32_t)((ptr + size) - end));
 }
 
 void __afl_buf_handle_malloc(uint32_t k, uintptr_t ptr, uintptr_t len) {
