@@ -81,8 +81,8 @@ endif
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
 	ln -sf afl-clang-fast ../afl-clang-fast++
 
-../afl-llvm-pass.so: afl-llvm-pass.so.cc | test_deps
-	$(CXX) $(CLANG_CFL) -shared $< -o $@ $(CLANG_LFL)
+../afl-llvm-pass.so: afl-llvm-pass.so.cc afl-llvm-common.cc | test_deps
+	$(CXX) $(CLANG_CFL) -shared afl-llvm-pass.so.cc afl-llvm-common.cc -o $@ $(CLANG_LFL)
 
 ../afl-catch-dlclose.so: afl-catch-dlclose.so.c | test_deps
 	$(CC) $(CFLAGS) -fPIC -shared $< -o $@
