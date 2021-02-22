@@ -282,7 +282,7 @@ afl-llvm-common.o: afl-llvm-common.cc afl-llvm-common.h
 ifeq "$(LLVM_MIN_4_0_1)" "0"
 	$(info [!] N-gram branch coverage instrumentation is not available for llvm version $(LLVMVER))
 endif
-	$(CXX) $(CLANG_CFL) -DLLVMInsTrim_EXPORTS -fno-rtti -fPIC -std=$(LLVM_STDCXX) -shared $< -o $@ $(CLANG_LFL) afl-llvm-common.o
+	$(CXX) $(CLANG_CFL) -fno-rtti -fPIC -std=$(LLVM_STDCXX) -shared $< -o $@ $(CLANG_LFL) afl-llvm-common.o
 
 ../afl-llvm-rt.o: afl-llvm-rt.o.c | test_deps
 	$(CC) $(CFLAGS) -Wno-unused-result -fPIC -c $< -o $@
@@ -294,6 +294,19 @@ endif
 ../afl-llvm-rt-64.o: afl-llvm-rt.o.c | test_deps
 	@printf "[*] Building 64-bit variant of the runtime (-m64)... "
 	@$(CC) $(CFLAGS) -Wno-unused-result -m64 -fPIC -c $< -o $@ 2>/dev/null; if [ "$$?" = "0" ]; then echo "success!"; else echo "failed (that's fine)"; fi
+
+../waypoints-%-pass.so: waypoints-%-pass.cc fuzzfactory.hpp
+	$(CXX) $(CLANG_CFL) -fno-rtti -fPIC -std=$(LLVM_STDCXX) -shared $< -o $@ $(CLANG_LFL)
+
+../waypoints-%-rt.o: waypoints-%-rt.c
+	$(CC) $(CFLAGS) -fPIC -c $< -o $@
+
+../waypoints-%-rt.a: ../waypoints-%-rt.o
+	$(AR) rcs $@ $<
+
+../waypoints-buf-rt.a: ../waypoints-buf-rt.o
+	$(MAKE) -C interval-tree/
+	$(AR) rcs $@ $< interval-tree/*.o
 
 test_build: $(PROGS)
 	@echo "[*] Testing the CC wrapper and instrumentation output..."
