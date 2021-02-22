@@ -10,7 +10,7 @@ HEADERS=interval_tree_generic.h rbtree_augmented.h  rbtree.h
 objects = $(CFILES:.c=.o)
 
 .c.o:
-	$(CC) $(CFLAGS) -c $< -o $@ $(LIBRARY_FLAGS)
+	$(CC) $(CFLAGS) -fPIC -c $< -o $@ $(LIBRARY_FLAGS)
 
 all: $(objects)
 $(objects): $(HEADERS)
