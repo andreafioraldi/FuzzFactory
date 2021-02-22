@@ -217,7 +217,7 @@ ifeq "$(TEST_MMAP)" "1"
         LDFLAGS += -Wno-deprecated-declarations
 endif
 
-  PROGS      = ../afl-clang-fast ../afl-llvm-pass.so ../afl-llvm-rt.o ../afl-llvm-rt-32.o ../afl-llvm-rt-64.o
+  PROGS      = ../afl-clang-fast ../afl-llvm-pass.so ../afl-catch-dlclose.so ../afl-llvm-rt.o ../afl-llvm-rt-32.o ../afl-llvm-rt-64.o
 
 # If prerequisites are not given, warn, do not build anything, and exit with code 0
 ifeq "$(LLVMVER)" ""
@@ -277,6 +277,9 @@ endif
 
 afl-llvm-common.o: afl-llvm-common.cc afl-llvm-common.h
 	$(CXX) $(CFLAGS) `$(LLVM_CONFIG) --cxxflags` -fno-rtti -fPIC -std=$(LLVM_STDCXX) -c $< -o $@ 
+
+../afl-catch-dlclose.so: afl-catch-dlclose.so.c | test_deps
+	$(CC) $(CFLAGS) -fPIC -shared $< -o $@
 
 ../afl-llvm-pass.so: afl-llvm-pass.so.cc afl-llvm-common.o | test_deps
 ifeq "$(LLVM_MIN_4_0_1)" "0"
